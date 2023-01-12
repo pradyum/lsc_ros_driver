@@ -1,5 +1,5 @@
 # Autonics LSC ROS Driver
-This ROS Driver is for Autonics LSC-C Series
+This ROS Driver is for Autonics LSC Series
 
 ### Table of Contents
 
@@ -10,8 +10,8 @@ This ROS Driver is for Autonics LSC-C Series
 
 
 ### 1. Supported Hardware
-#### 1.1 Model name : LSC-C Series
-#####   Website : [Autonics/LiDAR/LSC-C](https://www.autonics.com/series/3001018)
+#### 1.1 Model name : LSC Series
+#####   Website : [Autonics/LiDAR/LSC](https://www.autonics.com/series/3001018)
 
 
 ### 2. ROS API
@@ -26,7 +26,8 @@ This ROS Driver is for Autonics LSC-C Series
 * frame_id(default : laser, type : string) - The frame name of scan data
 * range_min(default : 0.05, type : double) - Minimum range value [m]
 * range_max(default : 25.0, type : double) - Maximum range value [m]
-* password(default : 0000, type : string) - Password to login LSC-C
+* password(default : 0000, type : string) - Password to login LSC
+* topic_name(default : scan, type : string) - Topic name
 
 
 ### 3. Build

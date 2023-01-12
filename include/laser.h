@@ -89,6 +89,8 @@ private:
 
     bool rcv_msg_flag_;
     std::vector<unsigned char> rcv_msg_;
+
+    std::string topic_name;
 };
 
 #endif

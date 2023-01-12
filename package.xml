@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package format="2">
   <name>lsc_ros_driver</name>
-  <version>1.0.2</version>
+  <version>1.0.3</version>
   <description>ROS driver package for LSC-C Series</description>
   <author email="lidar-ros@autonics.com">Autonics-lidar</author>
   <maintainer email="lidar-ros@autonics.com">Autonics-lidar</maintainer>

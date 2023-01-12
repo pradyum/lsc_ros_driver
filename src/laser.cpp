@@ -259,9 +259,7 @@ int AutoLaser::laserInit(void)
     std::string addr = "192.168.0.1", frame_id = "laser", port = "8000", password = "0000";
     double range_min = 0.05, range_max = 25;
     uint16_t port_num = 0, recnt_cnt = 0;
-
-    pub_scan = n.advertise<sensor_msgs::LaserScan>("scan", 1000);
-    sub_cmd = n.subscribe<std_msgs::String>("command", 10, &AutoLaser::comSubCallback, this);
+    topic_name = "scan";
 
     priv_nh.getParam("addr", addr);
     priv_nh.getParam("frame_id", frame_id);
@@ -269,10 +267,14 @@ int AutoLaser::laserInit(void)
     priv_nh.getParam("range_min", range_min);
     priv_nh.getParam("range_max", range_max);
     priv_nh.getParam("password", password);
+    priv_nh.getParam("topic_name", topic_name);
 
     scan_msg->header.frame_id = frame_id;
     scan_msg->range_min = range_min;
     scan_msg->range_max = range_max;
+
+    pub_scan = n.advertise<sensor_msgs::LaserScan>(topic_name, 1000);
+    sub_cmd = n.subscribe<std_msgs::String>("command", 10, &AutoLaser::comSubCallback, this);
 
     if(socket.clientOpen(addr, port) < 0)
     {
@@ -310,6 +312,7 @@ int AutoLaser::laserInit(void)
 
 int AutoLaser::run(void)
 {
+    ros::Rate loop_rate(150);
     self_test::TestRunner self_test;
 
     self_test.setID("self_test");
@@ -317,7 +320,7 @@ int AutoLaser::run(void)
 
     double min_freq = 0.00025;  // Hz
     double max_freq = 15.0;     // Hz
-    diagnostic_updater::HeaderlessTopicDiagnostic pub_freq("scan", diagnostic_topic_updater, diagnostic_updater::FrequencyStatusParam(&min_freq, &max_freq, 0.1, 1));
+    diagnostic_updater::HeaderlessTopicDiagnostic pub_freq(topic_name, diagnostic_topic_updater, diagnostic_updater::FrequencyStatusParam(&min_freq, &max_freq, 0.1, 1));
     diagnostic_topic_updater.setHardwareID("AutoLaser");
 
     laserSendCommand("SensorStart");
@@ -341,6 +344,7 @@ int AutoLaser::run(void)
         watchingDisconnection();
 
         ros::spinOnce();
+        loop_rate.sleep();
     }
 
     return 0;
