@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+
+<robot name="lsc" xmlns:xacro="http://www.ros.org/wiki/xacro">
+    <link name="lsc_mount">
+      <visual>
+        <geometry>
+          <mesh filename="package://lsc_ros_driver/urdf/lsc-c25ct3-bet.dae" />
+        </geometry>
+      </visual>
+      <collision>
+        <geometry>
+          <mesh filename="package://lsc_ros_driver/urdf/lsc-c25ct3-bet.stl" />
+        </geometry>
+      </collision>
+    </link>
+
+    <joint name="lsc_joint" type="fixed">
+      <parent link="lsc_mount" />
+      <child link="laser" />
+      <origin rpy="0 0 0" xyz="0 0 0.0546"/>
+    </joint>
+
+    <link name="laser">
+    </link>
+</robot>

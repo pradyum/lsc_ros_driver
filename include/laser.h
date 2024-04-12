@@ -32,7 +32,7 @@
 * POSSIBILITY OF SUCH DAMAGE.
 */
 
-
+ 
 
 #ifndef LASER_H
 #define LASER_H
@@ -66,6 +66,7 @@ private:
     std::string itostr(int i);
     std::string ftostr(float i);
     unsigned char hexToChar(unsigned int value);
+    void setScanAngle();
 
     int laserSendCommand(const std::string str);
     int getLaserData(sensor_msgs::LaserScan::Ptr scan_msg);
@@ -74,11 +75,15 @@ private:
     int getLscData(void);
     void login(std::string password);
 
+    std::string searchMatchedAddr(std::string std_addr, std::vector<std::string> ip_list);
+    std::string searchClientip(std::string baseAddr);
+    int addrChange();
+
     ros::NodeHandle n;
     ros::NodeHandle priv_nh;
     diagnostic_updater::Updater diagnostic_topic_updater;
 
-    Socket socket;
+    Socket sock;
     Parser p;
 
     ros::Publisher pub_scan;
@@ -90,7 +95,19 @@ private:
     bool rcv_msg_flag_;
     std::vector<unsigned char> rcv_msg_;
 
-    std::string topic_name;
+    std::string topic_name, ip_addr, prev_addr, new_addr, port_str;
+    double angle_offset_;
+
+    UdpSocket udpsock;
+    UdpParser udpparser;
+
+    enum IPCHANGE_STAT{
+        NONE = 0,
+        RQ_INFO,// cmd send
+        GET_INFO,// recv info
+        INFO_CHANGE,// change cmd send
+        GET_RESP// recv ack
+    };
 };
 
 #endif

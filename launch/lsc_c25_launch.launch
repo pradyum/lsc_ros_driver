@@ -9,10 +9,23 @@
         <param name="range_max" type="double" value="25.0"/>
         <param name="password" type="string" value="0000"/>
         <param name="topic_name" type="string" value="scan"/>
+
+        <param name="ip_change" type="bool" value="false"/>
+        <param name="prev_addr" type="string" value=""/>
+        <param name="new_addr" type="string" value=""/>
+
+        <param name="angle_min" type="double" value="-45.0"/>
+        <param name="angle_max" type="double" value="225.0"/>
+        <param name="angle_offset" type="double" value="0.0"/>
     </node>
+
+    <arg name="model" default="$(find lsc_ros_driver)/urdf/lsc_ros_driver.urdf.xacro"/>
+    <param name="robot_description" command="$(find xacro)xacro --inorder $(arg model)"/>
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"/>
 
     <node name="rviz" pkg="rviz" type="rviz" args="-d $(find lsc_ros_driver)/rviz/lsc_rviz.rviz"/>
 
 </launch>
+
 
 

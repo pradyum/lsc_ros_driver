@@ -40,6 +40,8 @@
 #include <pthread.h>
 #include <vector>
 #include <queue>
+#include <mutex>
+#include <memory>
 
 #include <sys/socket.h>
 #include <arpa/inet.h>
@@ -49,6 +51,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <errno.h>
+
 
 class Socket
 {
@@ -63,7 +66,7 @@ class Socket
 
         int tryReconnection(void);
 
-        friend void* readCallback(void* arg);
+        friend void* thread_readCallback(void* arg);
 
         int getServerSocket(void);
         bool getConnected(void);
@@ -76,7 +79,7 @@ class Socket
 
         bool getPthreadRunning(void);
 
-        std::queue<std::vector<unsigned char> > recvQueue;
+        std::queue<std::vector<unsigned char>> recvQueue;
 
     private:
         void putBufToMsg(unsigned char* buf, uint16_t size);
@@ -87,10 +90,53 @@ class Socket
         std::string port_num_st_;
 
         int m_server_sock_;
-        bool pthread_running_;
+        bool pthread_read_running_;
         bool m_connected_;
         bool rcv_timeout_;
         bool rcv_error_;
+};
+
+
+class UdpSocket
+{
+    public:
+        UdpSocket();
+        ~UdpSocket();
+
+        int clientOpen(std::string ipaddr, std::string port_num);
+        void clientClose(int fd_sock);
+        int32_t clientWrite(unsigned char* buff, uint16_t buf_size);
+        int32_t clientRead(unsigned char* buff, uint16_t buf_size, char* recv_ipaddr);
+        friend void* thread_ReadCallback(void* arg);
+
+        int getClientSocket(void);
+        bool getConnected(void);
+
+        bool getRcvTimeout(void);
+        bool getRcvError(void);
+
+        void setRcvTimeout(bool flag);
+        void setRcvError(bool flag);
+
+        bool getPthreadRunning(void);
+        void setPthreadRunning(bool flag);
+
+        void pushAddr(std::string recvaddr);
+        std::string popAddr(void);
+
+        std::queue<std::vector<unsigned char>> recvQueue;
+
+    private:
+        bool m_connected_;
+        sockaddr_in m_server_addr_;
+        pthread_t pthrd_id_;
+
+        int m_client_sock_;
+        bool pthread_read_running_;
+        bool rcv_timeout_;
+        bool rcv_error_;
+
+        std::queue<std::string> queue_addr_;
 };
 
 #endif
