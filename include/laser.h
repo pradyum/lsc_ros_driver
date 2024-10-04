@@ -108,6 +108,9 @@ private:
         INFO_CHANGE,// change cmd send
         GET_RESP// recv ack
     };
+
+    uint16_t scan_interval;
+    uint8_t fieldset_output_activate, rssi_activate;
 };
 
 #endif

@@ -17,6 +17,10 @@
         <param name="angle_min" type="double" value="-45.0"/>
         <param name="angle_max" type="double" value="225.0"/>
         <param name="angle_offset" type="double" value="0.0"/>
+
+        <param name="rssi_activate" type="bool" value="true"/>
+        <param name="scan_interval" type="int" value="1"/>
+        <param name="fieldset_output_activate" type="bool" value="true"/>
     </node>
 
     <arg name="model" default="$(find lsc_ros_driver)/urdf/lsc_ros_driver.urdf.xacro"/>

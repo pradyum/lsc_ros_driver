@@ -342,9 +342,9 @@ void AutoLaser::setScanAngle()
     sprintf(&buff[5], ",sWC,LSScanDataConfig,%X,%X,%X,%X,%X\x03",\
     (int) std::round(((scan_msg->angle_min * RAD2DEG) - angle_offset_) * 10000),\
     (int) std::round(((scan_msg->angle_max * RAD2DEG) - angle_offset_) * 10000),\
-    lsc.scan_data_config.rssi_activate,\
-    lsc.scan_data_config.scan_interval,\
-    lsc.scan_data_config.fieldset_output_activate);
+    rssi_activate,\
+    scan_interval,\
+    fieldset_output_activate);
 
     int length = strlen(buff);
 
@@ -707,6 +707,10 @@ int AutoLaser::laserInit(void)
     std::string frame_id = "laser", port = "8000", password = "0000";
     double range_min = 0.05, range_max = 25, angle_min = -45, angle_max = 225, angle_offset = 0;
     uint16_t port_num = 0, recnt_cnt = 0;
+
+    bool fieldset_output_activate_param = 1, rssi_activate_param = 1;
+    int scan_interval_param = 1;
+    
     bool ip_change = false;
     ip_addr = "192.168.0.1";
     topic_name = "scan";
@@ -728,6 +732,41 @@ int AutoLaser::laserInit(void)
     priv_nh.getParam("angle_min", angle_min);
     priv_nh.getParam("angle_max", angle_max);
     priv_nh.getParam("angle_offset", angle_offset);
+
+    scan_interval = 1;
+    fieldset_output_activate = 1;
+    rssi_activate = 1;
+
+    priv_nh.getParam("scan_interval", scan_interval_param);
+    priv_nh.getParam("fieldset_output_activate", fieldset_output_activate_param);
+    priv_nh.getParam("rssi_activate", rssi_activate_param);
+
+    if((scan_interval_param > 0) && (scan_interval_param <= 60000))
+    {
+        scan_interval = (uint16_t)scan_interval_param;
+    }
+    else
+    {
+        scan_interval = 1;
+    }
+
+    if(fieldset_output_activate_param)
+    {
+        fieldset_output_activate = 1;
+    }
+    else
+    {
+        fieldset_output_activate = 0;
+    }
+
+    if(rssi_activate_param)
+    {
+        rssi_activate = 1;
+    }
+    else
+    {
+        rssi_activate = 0;
+    }
     
     scan_msg->header.frame_id = frame_id;
     scan_msg->range_min = range_min;

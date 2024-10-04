@@ -34,6 +34,9 @@ This ROS Driver is for Autonics LSC Series
 * ip_change(default : false, type : bool) - Value to enable ip_change
 * prev_addr(default : , type : string) - Ip address of device
 * new_addr(default : , type : string) - Ip address to change
+* rssi_activate(default : true, type : bool) - RSSI data transmission activation ( true : Activated, false : Inactivated )
+* scan_interval(default : 1, type : int) - Scan data cycle ( 1 to 60000 ) x 67ms
+* fieldset_output_activate(default : true, type : bool) - Field set output activation ( true : Activated, false : Inactivated )
 
 
 ### 3. Installation
